@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-expressions */
 const chai = require('chai')
 const chaiAsPromised = require('chai-as-promised')
+const sinon = require('sinon')
 
 chai.use(chaiAsPromised)
 const { expect } = chai
@@ -10,13 +11,22 @@ const authController = require('../../controllers/auth.controller')
 
 
 describe('AuthController', () => {
-  beforeEach(() => {
-    authController.setRoles(['user'])
-  })
+  describe.only('isAuthorized', () => {
+    let user = {}
+    beforeEach(() => {
+      user = {
+        roles: ['user'],
+        isAuthorized(neededRole) {
+          return this.roles.indexOf(neededRole) >= 0
+        },
+      }
+      sinon.spy(user, 'isAuthorized')
+      authController.setUser(user)
+    })
 
-  describe('isAuthorized', () => {
     it('should return false if not authorized', () => {
       const isAuth = authController.isAuthorized('admin')
+      user.isAuthorized.calledOnce.should.be.true
       expect(isAuth).to.be.false
     })
 
@@ -31,6 +41,19 @@ describe('AuthController', () => {
   })
 
   describe('isAuthorizedPromise', () => {
-    it('should return false if not authorized', () => authController.isAuthorizedPromise('admin').should.eventually.be.true)
+    it('should return false if not authorized', () => authController.isAuthorizedPromise('admin').should.eventually.be.false)
+  })
+
+  describe('getIndex', () => {
+    it('should render index', () => {
+      const req = {}
+      const res = {
+        render: sinon.spy(),
+      }
+
+      authController.getIndex(req, res)
+      res.render.calledOnce.should.be.true
+      res.render.calledWithMatch('index').should.be.true
+    })
   })
 })
