@@ -1,6 +1,14 @@
-const assert = require('assert')
+var should = require('chai').should()
 
 describe('Basic Mocha Test', () => {
-  it('shoud throw errors', () => {
+  it('should deal with objects', () => {
+    const objA = { name: 'John', gender: 'male' }
+    const objB = { name: 'John', gender: 'male' }
+
+    objA.should.deep.equal(objB)
+  })
+  it('should allow testing with nulls', () => {
+    let iAmNull = null
+    should.not.exist(iAmNull)
   })
 })

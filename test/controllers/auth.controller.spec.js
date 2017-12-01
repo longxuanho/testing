@@ -1,33 +1,38 @@
-var assert = require('assert')
-var authController = require('../../controllers/auth.controller')
+const assert = require('assert')
+const expect = require('chai').expect
+const should = require('chai').should()
+const authController = require('../../controllers/auth.controller')
 
 describe('AuthController', () => {
-
   beforeEach(() => {
-    console.log('run beforeEach')
     authController.setRoles(['user'])
   })
 
   describe('isAuthorized', () => {
-    it('Should return false if not authorized', () => {
-      assert.equal(false, authController.isAuthorized('admin'))
+    it('should return false if not authorized', () => {
+      const isAuth = authController.isAuthorized('admin')
+      expect(isAuth).to.be.false
     })
 
-    it('Should return true if authorized', () => {
+    it('should return true if authorized', () => {
       authController.setRoles(['user', 'admin'])
-      assert.equal(true, authController.isAuthorized('admin'))
+      const isAuth = authController.isAuthorized('admin')
+      isAuth.should.be.true
     })
+
+    it('should not allow get if not authorized')
+    it('should allow get if authorized')
   })
 
   describe('isAuthorizedAsync', () => {
-    it('Should return false if not authorized', function (done) {
-      this.timeout(2500)
-      authController.isAuthorizedAsync('admin',
+    it('Should return false if not authorized', (done) => {
+      authController.isAuthorizedAsync(
+        'admin',
         (isAuth) => {
           assert.equal(false, isAuth)
           done()
-        })
+        }
+      )
     })
   })
-
 })
