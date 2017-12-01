@@ -1,7 +1,13 @@
-const assert = require('assert')
-const expect = require('chai').expect
-const should = require('chai').should()
+/* eslint-disable no-unused-expressions */
+const chai = require('chai')
+const chaiAsPromised = require('chai-as-promised')
+
+chai.use(chaiAsPromised)
+const { expect } = chai
+chai.should()
+
 const authController = require('../../controllers/auth.controller')
+
 
 describe('AuthController', () => {
   beforeEach(() => {
@@ -24,15 +30,7 @@ describe('AuthController', () => {
     it('should allow get if authorized')
   })
 
-  describe('isAuthorizedAsync', () => {
-    it('Should return false if not authorized', (done) => {
-      authController.isAuthorizedAsync(
-        'admin',
-        (isAuth) => {
-          assert.equal(false, isAuth)
-          done()
-        }
-      )
-    })
+  describe('isAuthorizedPromise', () => {
+    it('should return false if not authorized', () => authController.isAuthorizedPromise('admin').should.eventually.be.true)
   })
 })

@@ -1,4 +1,4 @@
-var should = require('chai').should()
+const should = require('chai').should()
 
 describe('Basic Mocha Test', () => {
   it('should deal with objects', () => {
@@ -8,7 +8,7 @@ describe('Basic Mocha Test', () => {
     objA.should.deep.equal(objB)
   })
   it('should allow testing with nulls', () => {
-    let iAmNull = null
+    const iAmNull = null
     should.not.exist(iAmNull)
   })
 })
